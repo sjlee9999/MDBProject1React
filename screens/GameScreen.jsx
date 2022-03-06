@@ -9,6 +9,13 @@ const names = Object.keys(nameToPic);
 
 export default function GameScreen() {
   // TODO: Declare and initialize state variables here, using "useState".
+  const [nameChoice, setNameChoice] = useState([]);
+  const [answer, setAnswer] = useState("");
+  const [imageOf, setImage] = useState(); 
+  const [score, setScore] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [next, setNext] = useState(false);
+
 
   // State for the timer is handled for you.
   const [timeLeft, setTimeLeft] = useState(5000);
@@ -21,6 +28,8 @@ export default function GameScreen() {
     } else {
       // Time has expired
       // TODO: update appropriate state variables
+      setTimeLeft(0);
+      setNext(true);
     }
   };
 
@@ -44,13 +53,27 @@ export default function GameScreen() {
     nameOptions = shuffle(nameOptions);
 
     // TODO: Update state here.
+    
+    
+    setAnswer(correctName);
+    setImage(correctImage);
+    setNameChoice(nameOptions);
 
     setTimeLeft(5000);
+    setNext(false);
+
+
   };
 
   // Called when user taps a name option.
   // TODO: Update correct # and total # state values.
-  const selectedNameChoice = (index) => {};
+  const selectedNameChoice = (index) => {
+    if (answer === nameChoice[index]) {
+      setScore(score + 1);
+      setNext(true);
+    }
+    setTotal(total + 1);
+  };
 
   // Call the countDown() method every 10 milliseconds.
   useEffect(() => {
@@ -67,6 +90,7 @@ export default function GameScreen() {
       getNextRound();
     },
     [
+      next
       /* TODO: Your State Variable Goes Here */
     ]
   );
@@ -83,7 +107,7 @@ export default function GameScreen() {
         onPress={() => selectedNameChoice(j)}
       >
         <Text style={styles.buttonText}>
-          {/* TODO: Use something from state here. */}
+          {nameChoice[i]}
         </Text>
       </TouchableOpacity>
     );
@@ -98,6 +122,15 @@ export default function GameScreen() {
       {/* Hint: What does the nameButtons list above hold? 
           What types of objects is this list storing?
           Try to get a sense of what's going on in the for loop above. */}
+          <Text style = {styles.timerText}> Timer: {timeRemainingStr}</Text>
+          <Text style = {styles.scoreText}> Score: {score} out of {total}</Text>
+          <Image source = {imageOf} style = {styles.image}></Image>
+          {nameButtons[0]}
+          {nameButtons[1]}
+          {nameButtons[2]}
+          {nameButtons[3]}
+
     </View>
+    
   );
 }
